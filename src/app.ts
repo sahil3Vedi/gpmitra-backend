@@ -39,6 +39,9 @@ app.use(function(req: Request,res: Response,next: NextFunction){
 const superusersRoute = require('./routes/superusers')
 app.use('/superusers',superusersRoute)
 
+const doctorsRoute = require('./routes/doctors')
+app.use('/doctors',doctorsRoute)
+
 // use cors middleware
 app.use(cors(options))
 

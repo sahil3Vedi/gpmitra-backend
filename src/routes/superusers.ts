@@ -10,7 +10,7 @@ router.get('/',(req: Request,res: Response) => {
 
 // ***************DO NOT COMMENT THIS OUT**********************
 //
-// //Create a new Superuser
+//Create a new Superuser
 // router.post('/spawnSuperuser', async (req: Request,res: Response) => {
 //     const {username,password} = req.body
 //     //Simple Validation
@@ -23,7 +23,7 @@ router.get('/',(req: Request,res: Response) => {
 //     // Create new Superuser
 //     const newSuperuser = new Superuser({username,password})
 //     // Create Salt and Hash
-//     const salt = await bcrypt.genSalt(20)
+//     const salt = await bcrypt.genSalt(14)
 //     const hash = await bcrypt.hash(newSuperuser.password,salt)
 //     newSuperuser.password = hash
 //     //Save Superuser
@@ -57,7 +57,8 @@ router.post('/login',async(req: Request,res: Response) => {
         const superuserFound = await Superuser.findOne({username})
         if (!superuserFound) return res.status(404).json({message: 'Superuser does not exist'})
         // Validate Password
-        const isMatch = bcrypt.compare(password, superuserFound.password)
+        const isMatch = await bcrypt.compare(password, superuserFound.password)
+        console.log(isMatch)
         if (!isMatch) return res.status(403).json({message: 'Password is incorrect'})
         // Sign Token
         const token = await jwt.sign({id: superuserFound.id},process.env.JWT_SECRET,{expiresIn: 3600},)
