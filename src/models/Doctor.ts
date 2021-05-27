@@ -10,6 +10,22 @@ const DoctorsSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    qualification: {
+        type: String,
+        required: true
+    },
+    organisation: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: Number,
+        required: true
     }
 })
 

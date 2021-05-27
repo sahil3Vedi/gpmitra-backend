@@ -10,7 +10,7 @@ router.get('/',(req: Request,res: Response) => {
 
 // Register Doctor
 router.post('/register', async (req: Request,res: Response) => {
-    const {email,password} = req.body
+    const {email, password, name, qualification, organisation, phone} = req.body
     //Simple Validation
     if (!email || !password){
         return res.status(400).json({message: 'Please enter all fields'})
@@ -19,7 +19,7 @@ router.post('/register', async (req: Request,res: Response) => {
     const doctorFound = await Doctor.findOne({email})
     if (doctorFound) return res.status(300).json({message: 'This Email ID is already registered'})
     // Create new Doctor
-    const newDoctor = new Doctor({email,password})
+    const newDoctor = new Doctor({email, password, name, qualification, organisation, phone})
     // Create Salt and Hash
     const salt = await bcrypt.genSalt(14)
     const hash = await bcrypt.hash(newDoctor.password,salt)
