@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 });
 // Register Doctor
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+    const { email, password, name, qualification, organisation, phone } = req.body;
     //Simple Validation
     if (!email || !password) {
         return res.status(400).json({ message: 'Please enter all fields' });
@@ -32,7 +32,7 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
     if (doctorFound)
         return res.status(300).json({ message: 'This Email ID is already registered' });
     // Create new Doctor
-    const newDoctor = new Doctor({ email, password });
+    const newDoctor = new Doctor({ email, password, name, qualification, organisation, phone });
     // Create Salt and Hash
     const salt = yield bcrypt.genSalt(14);
     const hash = yield bcrypt.hash(newDoctor.password, salt);
