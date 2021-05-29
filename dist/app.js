@@ -41,6 +41,8 @@ const superusersRoute = require('./routes/superusers');
 app.use('/superusers', superusersRoute);
 const doctorsRoute = require('./routes/doctors');
 app.use('/doctors', doctorsRoute);
+const patientsRoute = require('./routes/patients');
+app.use('/patients', patientsRoute);
 // use cors middleware
 app.use(cors_1.default(options));
 // Connect to DB
