@@ -23,6 +23,7 @@ router.post('/create', authdoctor, async(req: Request, res: Response) => {
     }
 })
 
+// fetches all patients of Doctor
 router.get('/fetch', authdoctor, async(req: Request, res: Response) =>{
     // Authenticating Doctor
     const doctorFound = await Doctor.findById(req.body.doctor.id)
