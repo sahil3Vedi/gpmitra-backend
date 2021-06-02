@@ -25,7 +25,7 @@ const options: cors.CorsOptions = {
 
 // Access Control Headers
 app.use(function(req: Request,res: Response,next: NextFunction){
-    const allowedOrigins = [process.env.ADMIN_FRONTEND!, process.env.FRONTEND!, `http://localhost:9000`];
+    const allowedOrigins = [process.env.ADMIN_FRONTEND!, process.env.FRONTEND!];
     const origin: string = req.headers.origin!;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -44,6 +44,9 @@ app.use('/doctors',doctorsRoute)
 
 const patientsRoute = require('./routes/patients')
 app.use('/patients',patientsRoute)
+
+const appointmentsRoute = require('./routes/appointments')
+app.use('/appointments',appointmentsRoute)
 
 // use cors middleware
 app.use(cors(options))
