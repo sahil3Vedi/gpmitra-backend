@@ -27,7 +27,7 @@ const options = {
 };
 // Access Control Headers
 app.use(function (req, res, next) {
-    const allowedOrigins = [process.env.ADMIN_FRONTEND, process.env.FRONTEND, `http://localhost:9000`];
+    const allowedOrigins = [process.env.ADMIN_FRONTEND, process.env.FRONTEND];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -43,6 +43,8 @@ const doctorsRoute = require('./routes/doctors');
 app.use('/doctors', doctorsRoute);
 const patientsRoute = require('./routes/patients');
 app.use('/patients', patientsRoute);
+const appointmentsRoute = require('./routes/appointments');
+app.use('/appointments', appointmentsRoute);
 // use cors middleware
 app.use(cors_1.default(options));
 // Connect to DB

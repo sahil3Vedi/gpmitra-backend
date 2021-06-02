@@ -14,30 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const Patient = require('../models/Patient');
 const Doctor = require('../models/Doctor');
+const Appointment = require('../models/Appointment');
 const authdoctor = require('../middleware/authdoctor');
-const moment = require('moment');
-// add a new Patient to DB
+// add new Appointment to DB
 router.post('/create', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Authenticating Doctor
     const doctorFound = yield Doctor.findById(req.body.doctor.id);
     if (!doctorFound)
         return res.status(404).json({ message: 'Token is not valid (sneak)' });
     const doctor = doctorFound._id;
-    const created_at = moment.utc().valueOf();
-    // Creating new Patient
-    const { name, gender, email, phone, address, occupation, dob, age, community } = req.body;
-    const newPatient = new Patient({ name, email, gender, phone, address, occupation, dob, age, community, doctor, created_at });
+    // Creating new Appointment
+    const { patient, date, time } = req.body;
+    const newAppointment = new Appointment({ patient, date, time, doctor });
     try {
-        const savedPatient = yield newPatient.save();
-        res.status(200).json({ ok: true, message: 'Patient Added' });
+        const savedAppointment = yield newAppointment.save();
+        res.status(200).json({ ok: true, message: 'Appointment Added' });
     }
     catch (_a) {
-        res.status(400).json({ ok: false, message: 'Unable to Add Patient' });
+        res.status(400).json({ ok: false, message: 'Unable to Add Appointment' });
     }
 }));
-// fetches all patients of Doctor
+// fetch all appointments from DB
 router.get('/fetch', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Authenticating Doctor
     const doctorFound = yield Doctor.findById(req.body.doctor.id);
@@ -45,11 +43,11 @@ router.get('/fetch', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0,
         return res.status(404).json({ message: 'Token is not valid (sneak)' });
     const doctorId = doctorFound._id;
     try {
-        const patients = yield Patient.find({ doctor: doctorId });
-        res.status(200).json({ message: patients });
+        const appointments = yield Appointment.find({ doctor: doctorId });
+        res.status(200).json({ message: appointments });
     }
     catch (e) {
-        res.status(404).json({ message: 'Unable to fetch Patients' });
+        res.status(404).json({ message: 'Unable to fetch Appointments' });
     }
 }));
 module.exports = router;
