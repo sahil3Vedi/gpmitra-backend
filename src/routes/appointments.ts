@@ -38,7 +38,7 @@ router.get('/fetch', authdoctor, async(req: Request, res: Response) => {
 })
 
 // Every Day, Appointments more than 24 hours due
-cron.schedule('* 0 * * *', async() => {
+cron.schedule('0 0 * * *', async() => {
   // Fetch Appointments more than 1 hours due
   const yesterDate = moment().subtract(1, 'd')
   const oldAppointments = await Appointment.find({ date:{$lt: yesterDate } })
