@@ -17,6 +17,8 @@ const router = express_1.default.Router();
 const Doctor = require('../models/Doctor');
 const Appointment = require('../models/Appointment');
 const authdoctor = require('../middleware/authdoctor');
+const cron = require('node-cron');
+const moment = require('moment');
 // add new Appointment to DB
 router.post('/create', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Authenticating Doctor
@@ -48,6 +50,19 @@ router.get('/fetch', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0,
     }
     catch (e) {
         res.status(404).json({ message: 'Unable to fetch Appointments' });
+    }
+}));
+// Every Day, Appointments more than 24 hours due
+cron.schedule('* 0 * * *', () => __awaiter(void 0, void 0, void 0, function* () {
+    // Fetch Appointments more than 1 hours due
+    const yesterDate = moment().subtract(1, 'd');
+    const oldAppointments = yield Appointment.find({ date: { $lt: yesterDate } });
+    console.log(oldAppointments);
+    if (oldAppointments) {
+        for (var oldAppt in oldAppointments) {
+            const appt = yield Appointment.findById(oldAppointments[oldAppt]._id);
+            appt.remove().then(() => console.log("Old Appointment Removed"));
+        }
     }
 }));
 module.exports = router;
