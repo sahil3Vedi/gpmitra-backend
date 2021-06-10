@@ -3,8 +3,6 @@ const router  = express.Router()
 const Doctor = require('../models/Doctor')
 const Appointment = require('../models/Appointment')
 const authdoctor = require('../middleware/authdoctor')
-const cron = require('node-cron')
-const moment = require('moment')
 
 // add new Appointment to DB
 router.post('/create', authdoctor, async(req: Request, res: Response) => {
@@ -37,19 +35,7 @@ router.get('/fetch', authdoctor, async(req: Request, res: Response) => {
     }
 })
 
-// Every Day, Appointments more than 24 hours due
-cron.schedule('0 0 * * *', async() => {
-  // Fetch Appointments more than 1 hours due
-  const yesterDate = moment().subtract(1, 'd')
-  const oldAppointments = await Appointment.find({ date:{$lt: yesterDate } })
-  console.log(oldAppointments)
-  if (oldAppointments) {
-      for (var oldAppt in oldAppointments){
-          const appt = await Appointment.findById(oldAppointments[oldAppt]._id)
-          appt.remove().then(()=>console.log("Old Appointment Removed"))
-      }
-  }
-});
+
 
 
 module.exports = router
