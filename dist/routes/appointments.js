@@ -50,4 +50,27 @@ router.get('/fetch', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0,
         res.status(404).json({ message: 'Unable to fetch Appointments' });
     }
 }));
+router.delete('/cancel/:id', authdoctor, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Authenticating Doctor
+    const doctorFound = yield Doctor.findById(req.body.doctor.id);
+    if (!doctorFound)
+        return res.status(404).json({ message: 'Token is not valid (sneak)' });
+    const doctorId = doctorFound._id;
+    const apptId = req.params.id;
+    try {
+        const appointmentFound = yield Appointment.findById(apptId);
+        if (!appointmentFound)
+            return res.status(404).json({ message: 'No such appointment exists' });
+        const doctorMatch = (appointmentFound.doctor.toString() === doctorId.toString());
+        if (doctorMatch) {
+            appointmentFound.remove().then(() => { return res.status(200).json({ message: 'Appointment Cancelled' }); });
+        }
+        else {
+            return res.status(401).json({ message: 'Doctor not authorised' });
+        }
+    }
+    catch (e) {
+        res.status(404).json({ message: 'Unable to cancel Appointment' });
+    }
+}));
 module.exports = router;
